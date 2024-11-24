@@ -7,7 +7,7 @@
 3. Использовать регистр BSRR GPIOE и настроить на выход пины PE11, PE12
 4. Софтварно запустить передачу данных на настроенные пины
 
-*Примечание*: Можно было бы использовать режим One Short Pulse, но ```Repetition Counter (RCR - 8 bits value) must be between 0 and 255.```, а количество точек в массива = 16636.
+*Примечание*: Можно было бы использовать режим One Short Pulse, но ``Repetition Counter (RCR - 8 bits value) must be between 0 and 255.``, а количество точек в массива = 16636.
 
 ## Введение
 
@@ -44,21 +44,21 @@ GPIO на STM32F4xx может работать на частотах до 84 М
 Включить DMA c синхронизацией по событиям PWM 4 канала:
 
 1. Настройка GPIO. В CubeMX, на вкладке Pinout & Configuration:
-
+   
    - Настроить выводы PE11, PE12 как Output.
    - Пины порта, выберите GPIO_Output.
    - Если все пины используются для передачи, можно выбрать All Output.
    - На вкладке System/GPIO/:
    - Скорость GPIO (например, High speed).
 2. Настройка таймера TIM1
-
+   
    - Clock Source: Internal Clock
    - Channel 4: PWM generation No output
    - Prescaler для задания частоты таймера -- 0.
    - Counter Period для управления периодом передачи 10-1.
    - Во вкладке DMA Settings для таймера:
 3. Настройка DMA
-
+   
    - На вкладке DMA: новый DMA2_Stream4.
    - Mode: Memory-to-Peripheral.
    - Priority: High.
@@ -70,7 +70,7 @@ GPIO на STM32F4xx может работать на частотах до 84 М
 
 ![Настройки DMA](images/dma.png)
 
-Ширина данных DMA &mdash; WORD, т.е., инкремент данных в памяти на 32 бита &mdash; ```uint32_t```. Таким образом можно отправлять данные на весь порт, например, GPIOE. Однако, благодаря использованию регистра BSRR можно отправлять и на определённые пины, скажем PE11, PE12, не затрагивая другие.
+Ширина данных DMA &mdash; WORD, т.е., инкремент данных в памяти на 32 бита &mdash; ``uint32_t``. Таким образом можно отправлять данные на весь порт, например, GPIOE. Однако, благодаря использованию регистра BSRR можно отправлять и на определённые пины, скажем PE11, PE12, не затрагивая другие.
 
 #### Настройка GPIO
 
@@ -123,7 +123,7 @@ static void s_data_init(void)
 Осталось запустить таймер TIM1 для синхронизации отправляемых данных по DMA и TIM2 для генерации тестового сигнала:
 
 ```c
-  // Запуск таймера синхронизации канала DMA для передачи данных
+// Запуск таймера синхронизации канала DMA для передачи данных
   if (HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4) != HAL_OK)
   {
 	  Error_Handler();
@@ -139,7 +139,7 @@ static void s_data_init(void)
 
 ## Функция запуска передачи DMA
 
-Важно обязательно проверять состояние ```hdma_tim1_ch4_trig_com``` и если канал занят, сбросить его. Иначе, повторной генерации не будет!
+Важно обязательно проверять состояние ``hdma_tim1_ch4_trig_com`` и если канал занят, сбросить его. Иначе, повторной генерации не будет!
 
 ```c
 void s_start_dma_transfer (void)
@@ -179,7 +179,7 @@ void s_start_dma_transfer (void)
 
 #### Обработчик прерывания:
 
-В обработчике ```HAL_GPIO_EXTI_Callback``` ([main.c](Core/Src/main.c)) вызывается функция ```Start_DMA_Transfer``` ([pulse.c](Core/Src/pulse.c)):
+В обработчике ``HAL_GPIO_EXTI_Callback`` ([main.c](Core/Src/main.c)) вызывается функция ``Start_DMA_Transfer`` ([pulse.c](Core/Src/pulse.c)):
 
 ```c
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
@@ -190,10 +190,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 }
 ```
 
-#### Функция ```Start_DMA_Transfer```:
+#### Функция ``Start_DMA_Transfer``:
 
-Проверяет состояние DMA. Если оно занято, выполняет остановку текущей передачи с помощью ```HAL_DMA_Abort()```.
-Перезапускает передачу данных из массива dma_data в регистр ```GPIOE->BSRR```.
+Проверяет состояние DMA. Если оно занято, выполняет остановку текущей передачи с помощью ``HAL_DMA_Abort()``.
+Перезапускает передачу данных из массива dma_data в регистр ``GPIOE->BSRR``.
 
 ### Итог
 
@@ -202,6 +202,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 1. 1й канал (<font color="yellow">жёлтый</font>) &mdash; входной сигнал от PC5
 2. 2й канал (<font color="blue">голубой</font>) &mdash; выходной сигнал от PE11
-3. 3й канал (фиолетовый) &mdash; выходной сигнал от PE12
+3. 3й канал (<font color="violet">фиолетовый</font>) &mdash; выходной сигнал от PE12
 
 ![Осцилограмма полученного сигнала](images/oscill.png)
+
