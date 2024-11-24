@@ -6,6 +6,8 @@
  */
 #include "tim.h"
 #include "pulse.h"
+#include "stm32f4xx.h"
+#include "stm32f4xx_ll_tim.h"
 
 #define DATA_SIZE 0x4000
 
@@ -43,7 +45,6 @@ static void s_data_init(void)
 
 void s_start_dma_transfer (void)
 {
-	//HAL_DMA_Abort(&hdma_tim1_ch4_trig_com);
 	if (HAL_DMA_GetState(&hdma_tim1_ch4_trig_com) != HAL_DMA_STATE_READY)
 	{
 		if (HAL_DMA_Abort(&hdma_tim1_ch4_trig_com) != HAL_OK)
@@ -58,5 +59,9 @@ void s_start_dma_transfer (void)
 	}
 
 	__HAL_TIM_ENABLE_DMA(&htim1, TIM_DMA_CC4);
-	__HAL_TIM_ENABLE(&htim1);
+
+	if (!(htim1.Instance->CR1 & TIM_CR1_CEN))
+	{
+		__HAL_TIM_ENABLE(&htim1);
+	}
 }

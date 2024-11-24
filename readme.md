@@ -141,7 +141,7 @@ static void s_data_init(void)
 Основная функция ``HAL_DMA_Start(&hdma_tim1_ch4_trig_com, (uint32_t)s_data, (uint32_t) &GPIOE->BSRR, DATA_SIZE)``
 
 ```c
-void s_start_dma_transfer (void)
+vvoid s_start_dma_transfer (void)
 {
 	if (HAL_DMA_GetState(&hdma_tim1_ch4_trig_com) != HAL_DMA_STATE_READY)
 	{
@@ -157,7 +157,11 @@ void s_start_dma_transfer (void)
 	}
 
 	__HAL_TIM_ENABLE_DMA(&htim1, TIM_DMA_CC4);
-	__HAL_TIM_ENABLE(&htim1);
+
+	if (!(htim1.Instance->CR1 & TIM_CR1_CEN))
+	{
+		__HAL_TIM_ENABLE(&htim1);
+	}
 }
 ```
 
