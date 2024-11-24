@@ -8,6 +8,7 @@
 4. Софтварно запустить передачу данных на настроенные пины
 
 *Примечание 1*: Можно было бы использовать режим One Short Pulse, но ``Repetition Counter (RCR - 8 bits value) must be between 0 and 255.``, а количество точек в массива = 16636.
+
 *Примечание 2*: Использовалась тестовая плата [STM32F4XX M](https://stm32-base.org/boards/STM32F407VET6-STM32F4XX-M#TFT-header), с микроконтроллером [STM32F407VGT6](https://www.st.com/en/microcontrollers-microprocessors/stm32f407vg.html)
 
 ## Введение
@@ -40,21 +41,21 @@ DMA передаёт данные на GPIO через регистр BSRR, по
 Включить DMA c синхронизацией по событиям PWM 4 канала:
 
 1. Настройка GPIO. В CubeMX, на вкладке Pinout & Configuration:
-   
+
    - Настроить выводы PE11, PE12 как Output.
    - Пины порта, выберите GPIO_Output.
    - Если все пины используются для передачи, можно выбрать All Output.
    - На вкладке System/GPIO/:
    - Скорость GPIO (например, High speed).
 2. Настройка таймера TIM1
-   
+
    - Clock Source: Internal Clock
    - Channel 4: PWM generation No output
    - Prescaler для задания частоты таймера -- 0.
    - Counter Period для управления периодом передачи 10-1.
    - Во вкладке DMA Settings для таймера:
 3. Настройка DMA
-   
+
    - На вкладке DMA: новый DMA2_Stream4.
    - Mode: Memory-to-Peripheral.
    - Priority: High.
@@ -201,4 +202,3 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 3. 3й канал (<font color="violet">фиолетовый</font>) &mdash; выходной сигнал от PE12
 
 ![Осцилограмма полученного сигнала](images/oscill.png)
-
