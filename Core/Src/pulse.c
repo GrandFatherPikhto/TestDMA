@@ -9,7 +9,7 @@
 #include "stm32f4xx.h"
 #include "stm32f4xx_ll_tim.h"
 
-#define DATA_SIZE 0x4000
+#define DATA_SIZE 0x2000
 
 static uint32_t s_data[DATA_SIZE] = {0};
 
